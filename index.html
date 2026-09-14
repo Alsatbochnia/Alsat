@@ -6,6 +6,7 @@
     <title>ALSAT - Diagnostyka i Elektronika Samochodowa</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
         tailwind.config = {
             theme: {
@@ -115,12 +116,10 @@
                 <div class="bg-white p-6 rounded-lg card-shadow h-fit">
                     <h2 class="text-lg font-bold mb-4">Nowe zlecenie</h2>
                     <form id="order-form" class="space-y-4">
-                        <div class="datalist-custom">
-    <label class="block text-sm font-medium mb-1">Klient *</label>
-    <input type="text" id="client-name" list="client-suggestions" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus">
-    <i class="fa-solid fa-chevron-down"></i>
-    <datalist id="client-suggestions"></datalist>
-</div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Klient *</label>
+                            <input type="text" id="client-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus">
+                        </div>
                         <div>
                             <label class="block text-sm font-medium mb-1">Telefon *</label>
                             <input type="tel" id="client-phone" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus">
@@ -196,11 +195,7 @@
                 <div class="bg-white p-6 rounded-lg card-shadow h-fit">
                     <h2 class="text-lg font-bold mb-4">Przyjęcie urządzenia</h2>
                     <form id="device-form" class="space-y-4">
-                        <div class="datalist-custom">
-    <label class="block text-sm font-medium mb-1">Klient *</label>
-    <input type="text" id="dev-client" list="client-suggestions" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus">
-    <i class="fa-solid fa-chevron-down"></i>
-</div>
+                        <div><label class="block text-sm font-medium mb-1">Klient *</label><input type="text" id="dev-client" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus"></div>
                         <div><label class="block text-sm font-medium mb-1">Telefon *</label><input type="tel" id="dev-phone" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus"></div>
                         <div class="datalist-custom"><label class="block text-sm font-medium mb-1">Typ urządzenia *</label>
                             <input type="text" id="dev-type" list="device-suggestions" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus"><i class="fa-solid fa-chevron-down"></i>
@@ -251,11 +246,7 @@
                     <h2 class="text-lg font-bold mb-4">Przyjęcie kluczyka</h2>
                     <form id="key-form" class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
-                            <div class="datalist-custom">
-    <label class="block text-sm font-medium mb-1">Klient *</label>
-    <input type="text" id="key-client" list="client-suggestions" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus">
-    <i class="fa-solid fa-chevron-down"></i>
-</div>
+                            <div><label class="block text-sm font-medium mb-1">Klient *</label><input type="text" id="key-client" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus"></div>
                             <div><label class="block text-sm font-medium mb-1">Telefon *</label><input type="tel" id="key-phone" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus"></div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
@@ -345,14 +336,44 @@
                         <i class="fa-solid fa-upload mr-2"></i>Importuj dane z pliku
                         <input type="file" id="import-input" accept=".json" class="hidden">
                     </label>
-<button id="g-save-btn" class="bg-red-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-red-700 transition">
-    <i class="fa-brands fa-google mr-2"></i>Zapisz na Google Drive
-</button>
-<button id="g-load-btn" class="bg-yellow-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-yellow-600 transition">
-    <i class="fa-brands fa-google mr-2"></i>Wczytaj z Google Drive
-</button>
                 </div>
                 <p class="text-sm text-gray-500 mt-3">Eksportuj dane aby zapisać kopię zapasową lub przenieść na inny komputer. Plik JSON zawiera wszystkie zlecenia, urządzenia i kluczyki.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg card-shadow mt-6">
+                <h3 class="font-bold mb-4"><i class="fa-brands fa-google-drive mr-2"></i>Synchronizacja z Google Drive</h3>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Google Client ID</label>
+                    <div class="flex gap-2 flex-wrap">
+                        <input type="text" id="gdrive-client-id" placeholder="xxxxxxxxxxxx.apps.googleusercontent.com" class="flex-1 min-w-[240px] px-3 py-2 border border-gray-300 rounded-lg input-focus">
+                        <button id="gdrive-save-client-id" type="button" class="bg-gray-700 text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-800 transition">Zapisz ID</button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Wpisujesz raz na każdym komputerze — ID zapamiętuje się w przeglądarce. Jak je zdobyć — patrz instrukcja niżej.</p>
+                </div>
+                <div class="flex gap-3 flex-wrap items-center">
+                    <button id="gdrive-connect-btn" type="button" class="bg-white border-2 border-gray-300 text-gray-700 px-6 py-2 rounded-lg font-medium hover:bg-gray-50 transition">
+                        <i class="fa-brands fa-google mr-2"></i>Połącz z Google
+                    </button>
+                    <button id="gdrive-upload-btn" type="button" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition hidden" disabled>
+                        <i class="fa-solid fa-cloud-arrow-up mr-2"></i>Zapisz w Google Drive
+                    </button>
+                    <button id="gdrive-download-btn" type="button" class="bg-green-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-green-700 transition hidden" disabled>
+                        <i class="fa-solid fa-cloud-arrow-down mr-2"></i>Wczytaj z Google Drive
+                    </button>
+                    <span id="gdrive-status" class="text-sm text-gray-500"></span>
+                </div>
+                <details class="mt-4 text-sm text-gray-600">
+                    <summary class="cursor-pointer font-medium text-blue-700">Jak skonfigurować Google Client ID? (robi się to raz)</summary>
+                    <ol class="list-decimal ml-5 mt-2 space-y-1">
+                        <li>Wejdź na <a href="https://console.cloud.google.com/" target="_blank" class="text-blue-600 underline">console.cloud.google.com</a> i utwórz nowy projekt (dowolna nazwa).</li>
+                        <li>W menu "APIs & Services" → "Library" znajdź i włącz <strong>Google Drive API</strong>.</li>
+                        <li>W "APIs & Services" → "OAuth consent screen" skonfiguruj ekran zgody: typ "External", dodaj adres e-mail swojego konta Google jako "Test user" (aplikacja nie musi być publikowana ani zweryfikowana do użytku prywatnego).</li>
+                        <li>W "APIs & Services" → "Credentials" → "Create Credentials" → "OAuth client ID" → typ aplikacji "Web application".</li>
+                        <li>W polu "Authorized JavaScript origins" wpisz adres, pod którym ta strona jest faktycznie hostowana, np. <code>https://twoja-domena.pl</code>. Strona musi działać pod adresem http(s) — synchronizacja nie zadziała, jeśli otwierasz plik lokalnie z dysku (adres zaczynający się od file://).</li>
+                        <li>Skopiuj wygenerowany Client ID i wklej go w pole powyżej, na każdym komputerze osobno.</li>
+                    </ol>
+                    <p class="mt-2">Na każdym komputerze otwórz stronę pod tym samym adresem i zaloguj się tym samym kontem Google — wtedy przycisk "Wczytaj z Google Drive" pobierze najnowszą zapisaną kopię danych.</p>
+                    <p class="mt-2">Uwaga: połączenie z Google wygasa po około godzinie — jeśli przyciski przestaną działać, kliknij ponownie "Połącz z Google".</p>
+                </details>
             </div>
         </div>
     </main>
@@ -382,9 +403,6 @@
                 <div><label class="block text-sm font-medium mb-1">Status</label><select id="edit-status" class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus">
                     <option>Przyjęte</option><option>Diagnostyka</option><option>W naprawie</option><option>Oczekiwanie na części</option><option>Gotowe</option><option>Zakończone</option>
                 </select></div>
-                <div><label class="block text-sm font-medium mb-1">Data przyjęcia</label>
-                    <input type="text" id="edit-order-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" readonly>
-                </div>
                 <div><label class="block text-sm font-medium mb-1">Opis</label><textarea id="edit-desc" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus"></textarea></div>
                 <div class="flex justify-between items-center pt-2">
                     <button type="button" id="delete-btn" class="text-red-600 font-medium">Usuń zlecenie</button>
@@ -420,9 +438,6 @@
                     <div><label class="block text-sm font-medium mb-1">Status</label><select id="edit-dev-status" class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus">
                         <option>Przyjęte do naprawy</option><option>W naprawie</option><option>Oczekiwanie na części</option><option>Gotowe do odbioru</option><option>Wydane</option>
                     </select></div>
-                </div>
-                <div><label class="block text-sm font-medium mb-1">Data przyjęcia</label>
-                    <input type="text" id="edit-device-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" readonly>
                 </div>
                 <div class="flex justify-between items-center pt-2">
                     <button type="button" id="delete-dev-btn" class="text-red-600 font-medium">Usuń urządzenie</button>
@@ -462,9 +477,6 @@
                     </select></div>
                 </div>
                 <div><label class="block text-sm font-medium mb-1">Uwagi</label><input type="text" id="edit-key-notes" class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus"></div>
-                <div><label class="block text-sm font-medium mb-1">Data przyjęcia</label>
-                    <input type="text" id="edit-key-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" readonly>
-                </div>
                 <div class="flex justify-between items-center pt-2">
                     <button type="button" id="delete-key-btn" class="text-red-600 font-medium">Usuń wpis</button>
                     <div class="gap-2 flex">
@@ -493,9 +505,6 @@
         const LS_ORDERS = 'alsat_orders';
         const LS_DEVICES = 'alsat_devices';
         const LS_KEYS = 'alsat_keys';
-	// === USTAWIENIA SYNCHRONIZACJI GOOGLE DRIVE ===
-const GOOGLE_CLIENT_ID = '1045753185919-s6uideao545q3p88065f29qp9p418kuj.apps.googleusercontent.com';
-const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
         const today = () => new Date().toISOString().split('T')[0];
         const formatDate = (d) => d ? new Date(d).toLocaleDateString('pl-PL') : '';
         
@@ -557,41 +566,38 @@ const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
             searchResults.classList.add('hidden'); searchInput.value = '';
             document.getElementById('edit-id').value = order.id;
             document.getElementById('edit-name').value = order.clientName;
-            document.getElementById('edit-phone').value = formatPhone(order.clientPhone);
+            document.getElementById('edit-phone').value = order.clientPhone;
             document.getElementById('edit-dev').value = order.device;
             document.getElementById('edit-serial').value = order.serial||'';
             document.getElementById('edit-serv').value = order.serviceType;
             document.getElementById('edit-amount').value = order.amount||'';
             document.getElementById('edit-status').value = order.status;
             document.getElementById('edit-desc').value = order.description;
-	    document.getElementById('edit-order-date').value = formatDate(order.date);
             document.getElementById('edit-modal').classList.remove('hidden');
         };
         const openDeviceForEdit = (dev) => {
             searchResults.classList.add('hidden'); searchInput.value = '';
             document.getElementById('edit-dev-id').value = dev.id;
             document.getElementById('edit-dev-client').value = dev.client;
-            document.getElementById('edit-dev-phone').value = formatPhone(dev.phone);
+            document.getElementById('edit-dev-phone').value = dev.phone;
             document.getElementById('edit-dev-type').value = dev.type;
             document.getElementById('edit-dev-car').value = dev.car || '';
             document.getElementById('edit-dev-desc').value = dev.description;
             document.getElementById('edit-dev-price').value = dev.price || '';
             document.getElementById('edit-dev-status').value = dev.status;
-	    document.getElementById('edit-device-date').value = formatDate(dev.date);
             document.getElementById('edit-device-modal').classList.remove('hidden');
         };
         const openKeyForEdit = (key) => {
             searchResults.classList.add('hidden'); searchInput.value = '';
             document.getElementById('edit-key-id').value = key.id;
             document.getElementById('edit-key-client').value = key.client;
-            document.getElementById('edit-key-phone').value = formatPhone(key.phone);
+            document.getElementById('edit-key-phone').value = key.phone;
             document.getElementById('edit-key-car').value = key.car;
             document.getElementById('edit-key-plate').value = key.plate || '';
             document.getElementById('edit-key-type').value = key.service;
             document.getElementById('edit-key-price').value = key.price || '';
             document.getElementById('edit-key-status').value = key.status;
             document.getElementById('edit-key-notes').value = key.notes || '';
-	    document.getElementById('edit-key-date').value = formatDate(key.date);
             document.getElementById('edit-key-modal').classList.remove('hidden');        };
         // === WYSZUKIWARKA ===
         const searchInput = document.getElementById('search-input');
@@ -726,71 +732,6 @@ const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
         });
         document.getElementById('do-print').addEventListener('click', ()=>{
             window.print();
-        });
-        // === SUGESTIE KLIENTÓW I AUTOMATYCZNE WYPEŁNIENIE TELEFONU ===
-        const updateClientSuggestions = () => {
-            const clientsMap = {};
-            orders.forEach(o => {
-                const name = o.clientName?.trim();
-                const phone = o.clientPhone?.trim();
-                if (name && phone) clientsMap[name] = phone;
-            });
-            devices.forEach(d => {
-                const name = d.client?.trim();
-                const phone = d.phone?.trim();
-                if (name && phone && !clientsMap[name]) clientsMap[name] = phone;
-            });
-            keysData.forEach(k => {
-                const name = k.client?.trim();
-                const phone = k.phone?.trim();
-                if (name && phone && !clientsMap[name]) clientsMap[name] = phone;
-            });
-            const datalist = document.getElementById('client-suggestions');
-            if (datalist) {
-                datalist.innerHTML = '';
-                Object.entries(clientsMap).forEach(([name, phone]) => {
-                    const option = document.createElement('option');
-                    option.value = name;
-                    option.dataset.phone = phone;
-                    datalist.appendChild(option);
-                });
-            }
-        };
-
-        // Wypełnij telefon przy ZLECENIACH
-        document.getElementById('client-name').addEventListener('input', () => {
-            const name = document.getElementById('client-name').value.trim();
-            const allOptions = document.querySelectorAll('#client-suggestions option');
-            for (const opt of allOptions) {
-                if (opt.value === name && opt.dataset.phone) {
-                    document.getElementById('client-phone').value = formatPhone(opt.dataset.phone);
-                    break;
-                }
-            }
-        });
-
-        // Wypełnij telefon przy URZĄDZENIACH
-        document.getElementById('dev-client').addEventListener('input', () => {
-            const name = document.getElementById('dev-client').value.trim();
-            const allOptions = document.querySelectorAll('#client-suggestions option');
-            for (const opt of allOptions) {
-                if (opt.value === name && opt.dataset.phone) {
-                    document.getElementById('dev-phone').value = formatPhone(opt.dataset.phone);
-                    break;
-                }
-            }
-        });
-
-        // Wypełnij telefon przy KLUCZYKACH
-        document.getElementById('key-client').addEventListener('input', () => {
-            const name = document.getElementById('key-client').value.trim();
-            const allOptions = document.querySelectorAll('#client-suggestions option');
-            for (const opt of allOptions) {
-                if (opt.value === name && opt.dataset.phone) {
-                    document.getElementById('key-phone').value = formatPhone(opt.dataset.phone);
-                    break;
-                }
-            }
         });
         // === PRZEŁĄCZANIE ZAKŁADEK ===
         document.querySelectorAll('.tab-btn').forEach(btn=>{
@@ -952,105 +893,6 @@ const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
         document.getElementById('cancel-device-edit').addEventListener('click', ()=>document.getElementById('edit-device-modal').classList.add('hidden'));
         document.getElementById('close-key-edit').addEventListener('click', ()=>document.getElementById('edit-key-modal').classList.add('hidden'));
         document.getElementById('cancel-key-edit').addEventListener('click', ()=>document.getElementById('edit-key-modal').classList.add('hidden'));
-        // === SYNCHRONIZACJA Z GOOGLE DRIVE ===
-        let gAuthToken = null;
-
-        // Buduj adres logowania
-        const getGoogleAuthUrl = () => {
-            const redirectUri = window.location.origin + window.location.pathname;
-            const authUrl = new URL('https://accounts.google.com/o/oauth2/auth');
-            authUrl.searchParams.set('client_id', GOOGLE_CLIENT_ID);
-            authUrl.searchParams.set('redirect_uri', redirectUri);
-            authUrl.searchParams.set('response_type', 'token');
-            authUrl.searchParams.set('scope', GOOGLE_SCOPE);
-            authUrl.searchParams.set('include_granted_scopes', 'true');
-            return authUrl.toString();
-        };
-
-        // Sprawdź czy mamy uprawnienia
-        const ensureGoogleAuth = async () => {
-            if (gAuthToken) return true;
-            // Odczytaj token z adresu po przekierowaniu
-            const hash = window.location.hash.substring(1);
-            if (hash) {
-                const params = new URLSearchParams(hash.replace(/&/g, '&'));
-                gAuthToken = params.get('access_token');
-                if (gAuthToken) {
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                    return true;
-                }
-            }
-            // Przekieruj do logowania
-            window.location.href = getGoogleAuthUrl();
-            return false;
-        };
-
-        // Zapisz dane na Google Drive
-        const saveToGoogleDrive = async () => {
-            const ok = await ensureGoogleAuth();
-            if (!ok || !gAuthToken) return;
-
-            const dane = { exportedAt: new Date().toISOString(), orders, devices, keys: keysData };
-            const plik = new Blob([JSON.stringify(dane, null, 2)], { type: 'application/json' });
-
-            // 1. Utwórz pusty plik
-            const meta = await fetch('https://www.googleapis.com/drive/v3/files', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${gAuthToken}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name: `alsat-kopia-${today()}.json`,
-                    mimeType: 'application/json'
-                })
-            }).then(r => r.json());
-
-            if (meta.error) { alert('Błąd: ' + meta.error.message); return; }
-
-            // 2. Wgraj zawartość
-            await fetch(`https://www.googleapis.com/upload/drive/v3/files/${meta.id}?uploadType=media`, {
-                method: 'PATCH',
-                headers: { 'Authorization': `Bearer ${gAuthToken}` },
-                body: plik
-            });
-
-            alert('✅ Dane zapisane na Google Drive!');
-        };
-
-        // Wczytaj dane z Google Drive
-        const loadFromGoogleDrive = async () => {
-            const ok = await ensureGoogleAuth();
-            if (!ok || !gAuthToken) return;
-
-            // Wyszukaj ostatni plik kopii
-            const szukaj = await fetch('https://www.googleapis.com/drive/v3/files?q=name%20contains%20%22alsat-kopia%22&orderBy=createdTime%20desc&pageSize=1', {
-                headers: { 'Authorization': `Bearer ${gAuthToken}` }
-            }).then(r => r.json());
-
-            if (!szukaj.files || szukaj.files.length === 0) {
-                alert('Nie znaleziono żadnej kopii zapasowej!');
-                return;
-            }
-
-            const plikId = szukaj.files[0].id;
-            const zawartosc = await fetch(`https://www.googleapis.com/drive/v3/files/${plikId}?alt=media`, {
-                headers: { 'Authorization': `Bearer ${gAuthToken}` }
-            }).then(r => r.json());
-
-            if (confirm(`Znaleziono kopię z ${new Date(zawartosc.exportedAt).toLocaleString()}.\nZaimportować dane? Zastąpi to wszystkie obecne wpisy!`)) {
-                orders = zawartosc.orders;
-                devices = zawartosc.devices;
-                keysData = zawartosc.keys;
-                save();
-                renderAll();
-                alert('✅ Dane zaimportowano pomyślnie!');
-            }
-        };
-
-        // Podłącz przyciski
-        document.getElementById('g-save-btn')?.addEventListener('click', saveToGoogleDrive);
-        document.getElementById('g-load-btn')?.addEventListener('click', loadFromGoogleDrive);
         // === EKSPORT / IMPORT ===
         document.getElementById('export-btn').addEventListener('click', ()=>{
             const data = { exportedAt: new Date().toISOString(), orders, devices, keys: keysData };
@@ -1074,6 +916,133 @@ const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
             };
             r.readAsText(f);
         });
+        // === SYNCHRONIZACJA Z GOOGLE DRIVE ===
+        const GDRIVE_FILE_NAME = 'alsat-dane.json';
+        const GDRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
+        let gdriveTokenClient = null;
+        let gdriveAccessToken = null;
+        let gdriveFileId = localStorage.getItem('alsat_gdrive_fileid') || null;
+
+        const gdriveClientIdInput = document.getElementById('gdrive-client-id');
+        const gdriveStatus = document.getElementById('gdrive-status');
+        const gdriveConnectBtn = document.getElementById('gdrive-connect-btn');
+        const gdriveUploadBtn = document.getElementById('gdrive-upload-btn');
+        const gdriveDownloadBtn = document.getElementById('gdrive-download-btn');
+
+        const savedClientId = localStorage.getItem('alsat_gdrive_client_id');
+        if (savedClientId) gdriveClientIdInput.value = savedClientId;
+
+        document.getElementById('gdrive-save-client-id').addEventListener('click', () => {
+            const id = gdriveClientIdInput.value.trim();
+            if (!id) { alert('Wpisz Client ID.'); return; }
+            localStorage.setItem('alsat_gdrive_client_id', id);
+            gdriveTokenClient = null;
+            gdriveStatus.textContent = 'Zapisano Client ID. Kliknij "Połącz z Google".';
+        });
+
+        function gdriveInitTokenClient() {
+            const clientId = localStorage.getItem('alsat_gdrive_client_id');
+            if (!clientId) { alert('Najpierw wpisz i zapisz Google Client ID (zobacz instrukcję poniżej).'); return null; }
+            if (typeof google === 'undefined' || !google.accounts) {
+                alert('Biblioteka Google nie została załadowana. Sprawdź połączenie z internetem i odśwież stronę.');
+                return null;
+            }
+            return google.accounts.oauth2.initTokenClient({
+                client_id: clientId,
+                scope: GDRIVE_SCOPE,
+                callback: (resp) => {
+                    if (resp.error) {
+                        gdriveStatus.textContent = 'Błąd autoryzacji: ' + resp.error;
+                        return;
+                    }
+                    gdriveAccessToken = resp.access_token;
+                    gdriveStatus.textContent = 'Połączono z Google Drive.';
+                    gdriveUploadBtn.classList.remove('hidden'); gdriveUploadBtn.disabled = false;
+                    gdriveDownloadBtn.classList.remove('hidden'); gdriveDownloadBtn.disabled = false;
+                }
+            });
+        }
+
+        gdriveConnectBtn.addEventListener('click', () => {
+            gdriveTokenClient = gdriveInitTokenClient();
+            if (!gdriveTokenClient) return;
+            gdriveStatus.textContent = 'Łączenie...';
+            gdriveTokenClient.requestAccessToken({ prompt: gdriveAccessToken ? '' : 'consent' });
+        });
+
+        async function gdriveFindFile() {
+            const q = encodeURIComponent(`name='${GDRIVE_FILE_NAME}' and trashed=false`);
+            const res = await fetch(`https://www.googleapis.com/drive/v3/files?q=${q}&spaces=drive&fields=files(id,name,modifiedTime)`, {
+                headers: { Authorization: `Bearer ${gdriveAccessToken}` }
+            });
+            if (!res.ok) throw new Error('Nie udało się wyszukać pliku (kod ' + res.status + ')');
+            const data = await res.json();
+            return data.files && data.files.length ? data.files[0] : null;
+        }
+
+        async function gdriveUpload() {
+            if (!gdriveAccessToken) { alert('Najpierw połącz się z Google.'); return; }
+            gdriveStatus.textContent = 'Zapisywanie...';
+            try {
+                const payload = { exportedAt: new Date().toISOString(), orders, devices, keys: keysData };
+                const content = JSON.stringify(payload, null, 2);
+                let fileId = gdriveFileId;
+                if (!fileId) {
+                    const existing = await gdriveFindFile();
+                    if (existing) fileId = existing.id;
+                }
+                const metadata = { name: GDRIVE_FILE_NAME, mimeType: 'application/json' };
+                const boundary = 'alsatboundary';
+                const body =
+                    `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n` +
+                    `--${boundary}\r\nContent-Type: application/json\r\n\r\n${content}\r\n--${boundary}--`;
+                const url = fileId
+                    ? `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`
+                    : `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart`;
+                const res = await fetch(url, {
+                    method: fileId ? 'PATCH' : 'POST',
+                    headers: { Authorization: `Bearer ${gdriveAccessToken}`, 'Content-Type': `multipart/related; boundary=${boundary}` },
+                    body
+                });
+                if (!res.ok) throw new Error('Błąd zapisu (kod ' + res.status + ')');
+                const result = await res.json();
+                gdriveFileId = result.id;
+                localStorage.setItem('alsat_gdrive_fileid', gdriveFileId);
+                gdriveStatus.textContent = 'Zapisano w Google Drive: ' + new Date().toLocaleTimeString('pl-PL');
+            } catch (err) {
+                gdriveStatus.textContent = 'Błąd: ' + err.message;
+            }
+        }
+
+        async function gdriveDownload() {
+            if (!gdriveAccessToken) { alert('Najpierw połącz się z Google.'); return; }
+            gdriveStatus.textContent = 'Wczytywanie...';
+            try {
+                let fileId = gdriveFileId;
+                if (!fileId) {
+                    const existing = await gdriveFindFile();
+                    if (!existing) { gdriveStatus.textContent = 'Nie znaleziono pliku kopii zapasowej w Google Drive. Najpierw zapisz dane na jakimś komputerze.'; return; }
+                    fileId = existing.id;
+                }
+                const res = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
+                    headers: { Authorization: `Bearer ${gdriveAccessToken}` }
+                });
+                if (!res.ok) throw new Error('Błąd odczytu (kod ' + res.status + ')');
+                const imported = await res.json();
+                if (!imported.orders || !imported.devices || !imported.keys) throw new Error('Nieprawidłowy plik danych');
+                if (confirm('Dane z Google Drive zastąpią wszystkie obecne dane w tej przeglądarce. Kontynuować?')) {
+                    orders = imported.orders; devices = imported.devices; keysData = imported.keys;
+                    gdriveFileId = fileId; localStorage.setItem('alsat_gdrive_fileid', gdriveFileId);
+                    save(); renderAll();
+                    gdriveStatus.textContent = 'Wczytano dane z Google Drive: ' + new Date().toLocaleTimeString('pl-PL');
+                }
+            } catch (err) {
+                gdriveStatus.textContent = 'Błąd: ' + err.message;
+            }
+        }
+
+        gdriveUploadBtn.addEventListener('click', gdriveUpload);
+        gdriveDownloadBtn.addEventListener('click', gdriveDownload);
         // === FORMATOWANIE TELEFONU PODCZAS WPISYWANIA ===
         document.addEventListener('input', e => {
             const ids = ['client-phone','dev-phone','key-phone','edit-phone','edit-dev-phone','edit-key-phone'];
@@ -1083,7 +1052,6 @@ const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
         });
         // === RENDEROWANIE WSZYSTKICH LIST ===
         const renderAll = () => {
-	updateClientSuggestions();
             document.getElementById('orders-list').innerHTML = orders.length===0
                 ? '<div class="p-4 text-center text-gray-500">Brak zleceń</div>'
                 : orders.map(o=>`
