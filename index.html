@@ -118,7 +118,8 @@
                     <form id="order-form" class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium mb-1">Klient *</label>
-                            <input type="text" id="client-name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus">
+                            <input type="text" id="client-name" list="client-suggestions" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus">
+<datalist id="client-suggestions"></datalist>
                         </div>
                         <div>
                             <label class="block text-sm font-medium mb-1">Telefon *</label>
@@ -195,7 +196,8 @@
                 <div class="bg-white p-6 rounded-lg card-shadow h-fit">
                     <h2 class="text-lg font-bold mb-4">Przyjęcie urządzenia</h2>
                     <form id="device-form" class="space-y-4">
-                        <div><label class="block text-sm font-medium mb-1">Klient *</label><input type="text" id="dev-client" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus"></div>
+                        <div><label class="block text-sm font-medium mb-1">Klient *</label><input type="text" id="dev-client" list="client-suggestions-dev" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus">
+<datalist id="client-suggestions-dev"></datalist></div>
                         <div><label class="block text-sm font-medium mb-1">Telefon *</label><input type="tel" id="dev-phone" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus"></div>
                         <div class="datalist-custom"><label class="block text-sm font-medium mb-1">Typ urządzenia *</label>
                             <input type="text" id="dev-type" list="device-suggestions" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus"><i class="fa-solid fa-chevron-down"></i>
@@ -246,7 +248,8 @@
                     <h2 class="text-lg font-bold mb-4">Przyjęcie kluczyka</h2>
                     <form id="key-form" class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
-                            <div><label class="block text-sm font-medium mb-1">Klient *</label><input type="text" id="key-client" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus"></div>
+                            <div><label class="block text-sm font-medium mb-1">Klient *</label><input type="text" id="key-client" list="client-suggestions-key" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus">
+<datalist id="client-suggestions-key"></datalist></div>
                             <div><label class="block text-sm font-medium mb-1">Telefon *</label><input type="tel" id="key-phone" required class="w-full px-3 py-2 border border-gray-300 rounded-lg input-focus"></div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
@@ -566,7 +569,7 @@
             searchResults.classList.add('hidden'); searchInput.value = '';
             document.getElementById('edit-id').value = order.id;
             document.getElementById('edit-name').value = order.clientName;
-            document.getElementById('edit-phone').value = order.clientPhone;
+            document.getElementById('edit-phone').value = formatPhone(order.clientPhone);
             document.getElementById('edit-dev').value = order.device;
             document.getElementById('edit-serial').value = order.serial||'';
             document.getElementById('edit-serv').value = order.serviceType;
@@ -579,7 +582,7 @@
             searchResults.classList.add('hidden'); searchInput.value = '';
             document.getElementById('edit-dev-id').value = dev.id;
             document.getElementById('edit-dev-client').value = dev.client;
-            document.getElementById('edit-dev-phone').value = dev.phone;
+            document.getElementById('edit-dev-phone').value = formatPhone(dev.phone);
             document.getElementById('edit-dev-type').value = dev.type;
             document.getElementById('edit-dev-car').value = dev.car || '';
             document.getElementById('edit-dev-desc').value = dev.description;
@@ -591,7 +594,7 @@
             searchResults.classList.add('hidden'); searchInput.value = '';
             document.getElementById('edit-key-id').value = key.id;
             document.getElementById('edit-key-client').value = key.client;
-            document.getElementById('edit-key-phone').value = key.phone;
+            document.getElementById('edit-key-phone').value = formatPhone(key.phone);
             document.getElementById('edit-key-car').value = key.car;
             document.getElementById('edit-key-plate').value = key.plate || '';
             document.getElementById('edit-key-type').value = key.service;
@@ -610,21 +613,21 @@
                 if (normalizeText(o.clientName).includes(phrase) || normalizeText(o.clientPhone).includes(phrase) ||
                     normalizeText(o.device).includes(phrase) || normalizeText(o.serial).includes(phrase) ||
                     normalizeText(o.serviceType).includes(phrase)) {
-                    results.push({type:'Zlecenie', label:`${o.clientName} — ${o.device}`, sub:`${o.serviceType} | ${formatDate(o.date)}`, data:o, openFn:()=>openOrderForEdit(o)});
+                    results.push({type:'Zlecenie', label:`${o.clientName} — ${o.device}`, sub:`📞 ${formatPhone(o.clientPhone)} | ${o.serviceType} | ${formatDate(o.date)}`, data:o, openFn:()=>openOrderForEdit(o)});
                 }
             });
             devices.forEach(d => {
                 if (normalizeText(d.client).includes(phrase) || normalizeText(d.phone).includes(phrase) ||
                     normalizeText(d.type).includes(phrase) || normalizeText(d.car).includes(phrase) ||
                     normalizeText(d.description).includes(phrase)) {
-                    results.push({type:'Urządzenie', label:`${d.client} — ${d.type}`, sub:`${d.car||'brak pojazdu'} | ${formatDate(d.date)}`, data:d, openFn:()=>openDeviceForEdit(d)});
+                    results.push({type:'Urządzenie', label:`${d.client} — ${d.type}`, sub:`📞 ${formatPhone(d.phone)} | ${d.car||'brak pojazdu'} | ${formatDate(d.date)}`, data:d, openFn:()=>openDeviceForEdit(d)});
                 }
             });
             keysData.forEach(k => {
                 if (normalizeText(k.client).includes(phrase) || normalizeText(k.phone).includes(phrase) ||
                     normalizeText(k.car).includes(phrase) || normalizeText(k.service).includes(phrase) ||
                     normalizeText(k.notes).includes(phrase)) {
-                    results.push({type:'Kluczyk', label:`${k.client} — ${k.car}`, sub:`${k.service} | ${formatDate(k.date)}`, data:k, openFn:()=>openKeyForEdit(k)});
+                    results.push({type:'Kluczyk', label:`${k.client} — ${k.car}`, sub:`📞 ${formatPhone(k.phone)} | ${k.service} | ${formatDate(k.date)}`, data:k, openFn:()=>openKeyForEdit(k)});
                 }
             });
             if (results.length === 0) {
@@ -744,6 +747,68 @@
                 renderAll();
             });
         });
+// === AUTOUZUPEŁNIANIE KLIENTÓW I NUMERU TELEFONU ===
+// Buduje listę unikalnych klientów z ich numerami telefonów
+const getUniqueClients = () => {
+    const clients = {};
+    // Pobierz z zleceń
+    orders.forEach(o => {
+        const name = o.clientName.trim();
+        const phone = o.clientPhone.replace(/\D/g, '');
+        if (name && phone) {
+            if (!clients[name]) clients[name] = phone;
+        }
+    });
+    // Pobierz z urządzeń
+    devices.forEach(d => {
+        const name = d.client.trim();
+        const phone = d.phone.replace(/\D/g, '');
+        if (name && phone) {
+            if (!clients[name]) clients[name] = phone;
+        }
+    });
+    // Pobierz z kluczyków
+    keysData.forEach(k => {
+        const name = k.client.trim();
+        const phone = k.phone.replace(/\D/g, '');
+        if (name && phone) {
+            if (!clients[name]) clients[name] = phone;
+        }
+    });
+    return clients;
+};
+
+// Gdy wpisujesz nazwę klienta — automatycznie wypełnia numer telefonu
+document.getElementById('client-name').addEventListener('input', e => {
+    const nameInput = e.target.value.trim();
+    const phoneInput = document.getElementById('client-phone');
+    const clients = getUniqueClients();
+    
+    // Jeśli istnieje klient o dokładnie takiej nazwie — automatycznie wstaw numer
+    if (clients[nameInput]) {
+        phoneInput.value = formatPhone(clients[nameInput]);
+    }
+});
+
+// To samo dla urządzeń
+document.getElementById('dev-client').addEventListener('input', e => {
+    const nameInput = e.target.value.trim();
+    const phoneInput = document.getElementById('dev-phone');
+    const clients = getUniqueClients();
+    if (clients[nameInput]) {
+        phoneInput.value = formatPhone(clients[nameInput]);
+    }
+});
+
+// To samo dla kluczyków
+document.getElementById('key-client').addEventListener('input', e => {
+    const nameInput = e.target.value.trim();
+    const phoneInput = document.getElementById('key-phone');
+    const clients = getUniqueClients();
+    if (clients[nameInput]) {
+        phoneInput.value = formatPhone(clients[nameInput]);
+    }
+});
         // === DODAJ ZLECENIE ===
         document.getElementById('order-form').addEventListener('submit', e=>{
             e.preventDefault();
@@ -1052,6 +1117,12 @@
         });
         // === RENDEROWANIE WSZYSTKICH LIST ===
         const renderAll = () => {
+// Aktualizuj listę sugestii klientów
+const clientsList = getUniqueClients();
+const clientNames = Object.keys(clientsList).sort();
+document.getElementById('client-suggestions').innerHTML = clientNames.map(n=>`<option value="${n}">`).join('');
+document.getElementById('client-suggestions-dev').innerHTML = clientNames.map(n=>`<option value="${n}">`).join('');
+document.getElementById('client-suggestions-key').innerHTML = clientNames.map(n=>`<option value="${n}">`).join('');
             document.getElementById('orders-list').innerHTML = orders.length===0
                 ? '<div class="p-4 text-center text-gray-500">Brak zleceń</div>'
                 : orders.map(o=>`
